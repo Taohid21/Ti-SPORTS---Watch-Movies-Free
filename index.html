@@ -114,7 +114,140 @@
     </div>
   </footer>
 
-  <script>
+  <!-- Popup Container -->
+<div id="palestine-popup" class="popup-overlay">
+  <div class="popup-box">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Palestine.svg" class="popup-img" alt="Palestine Flag">
+    <h2 class="popup-question">Are You Support Palestine?</h2>
+    <div class="popup-buttons">
+      <button onclick="handleYes()" class="btn-yes">Yes</button>
+      <button onclick="handleNo()" class="btn-no">No</button>
+    </div>
+    <div id="congrats" class="congrats-message">Thank you for supporting Palestine!</div>
+  </div>
+</div>
+
+<style>
+/* Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Popup Box */
+.popup-box {
+  background: #fff;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+  border-radius: 20px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  animation: popup-in 0.5s ease-out;
+}
+
+/* Image */
+.popup-img {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+/* Question */
+.popup-question {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Buttons */
+.popup-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-yes, .btn-no {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-yes {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-no {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-yes:hover {
+  background-color: #218838;
+}
+
+.btn-no:hover {
+  background-color: #c82333;
+}
+
+/* Congrats Message */
+.congrats-message {
+  display: none;
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #28a745;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Animations */
+@keyframes popup-in {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+</style>
+
+<script>
+// Check if user already answered
+const userResponse = localStorage.getItem('palestineSupport');
+if (userResponse === 'no') {
+  window.location.href = "https://example.com"; // Change to your redirect URL
+} else if (userResponse === 'yes') {
+  document.getElementById('palestine-popup').style.display = 'none';
+}
+
+// Yes handler
+function handleYes() {
+  localStorage.setItem('palestineSupport', 'yes');
+  document.querySelector('.popup-buttons').style.display = 'none';
+  document.getElementById('congrats').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('palestine-popup').style.display = 'none';
+  }, 2500);
+}
+
+// No handler
+function handleNo() {
+  localStorage.setItem('palestineSupport', 'no');
+  window.location.href = "https://example.com"; // Change to your redirect URL
+}
     // Carousel
     const images = [
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj6TQ38RucPFsUYdfylFLQ2jM0cAFNsBVvDdEQYVTRmRmtmKQChfPzFKLl&s=10bdd.jpg?width=2400',
@@ -180,4 +313,4 @@
     }
   </script>
 </body>
-</html>
+        </html>
