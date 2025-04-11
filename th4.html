@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPL PLAYER | TI SPORTS</title>
-  <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -71,11 +72,11 @@
       border-radius: 12px;
     }
 
-    #player {
+    video {
       width: 100%;
       height: 230px;
       border-radius: 10px;
-      overflow: hidden;
+      background: #000;
     }
 
     .server-buttons {
@@ -122,7 +123,7 @@
   </header>
 
   <div class="video-container">
-    <div id="player"></div>
+    <video id="player" controls autoplay></video>
   </div>
 
   <div class="server-buttons">
@@ -140,43 +141,39 @@
   </div>
 
   <script>
-    var servers = {
-      1:"http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/66b66b9e14a2bb000872f606/master.m3u8?advertisingId=&appName=web&appVersion=unknown&appStoreUrl=&architecture=&buildVersion=&clientTime=0&deviceDNT=0&deviceId=d02df0d0-8952-11ef-8353-f70668e6a0ea&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&sid=3616fbed-aaac-4962-9c37-d32e9278452e&userId=&serverSideAds=true",
- 2: "http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/66b66b9e14a2bb000872f606/3321280/playlist.m3u8?terminate=false&sid=3616fbed-aaac-4962-9c37-d32e9278452e&deviceDNT=0&deviceModel=web&deviceVersion=unknown&serverSideAds=true&appName=web&deviceId=d02df0d0-8952-11ef-8353-f70668e6a0ea&appVersion=unknown&deviceType=web&deviceMake=Chrome",
-3:"https://abkvfuwaaaaaaaamlk56gfiik2ug5.otte.live.cf.ww.aiv-cdn.net/gru-nitro/live/clients/dash-sd/enc/vodez4h7i9/out/v1/e929aee089864ce98e4c335d19f41e16/cenc-sd.mpd"
+    const servers = {
+      1: "http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/66b66b9e14a2bb000872f606/3321280/playlist.m3u8?terminate=false&sid=3616fbed-aaac-4962-9c37-d32e9278452e&deviceDNT=0&deviceModel=web&deviceVersion=unknown&serverSideAds=true&appName=web&deviceId=d02df0d0-8952-11ef-8353-f70668e6a0ea&appVersion=unknown&deviceType=web&deviceMake=Chrome",
+      2: "http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/66b66b9e14a2bb000872f606/master.m3u8?advertisingId=&appName=web&appVersion=unknown&appStoreUrl=&architecture=&buildVersion=&clientTime=0&deviceDNT=0&deviceId=d02df0d0-8952-11ef-8353-f70668e6a0ea&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&sid=3616fbed-aaac-4962-9c37-d32e9278452e&userId=&serverSideAds=true",
+      3: "https://abkvfuwaaaaaaaamlk56gfiik2ug5.otte.live.cf.ww.aiv-cdn.net/gru-nitro/live/clients/dash-sd/enc/vodez4h7i9/out/v1/e929aee089864ce98e4c335d19f41e16/cenc-sd.mpd"
     };
 
-    function detectType(url) {
-      if (url.includes(".m3u8")) return "hls";
-      if (url.includes(".mpd")) return "dash";
-      if (url.includes(".mp4")) return "mp4";
-      if (url.includes(".ts")) return "mp4";
-      return "video";
-    }
-
-    var player = jwplayer("player").setup({
-      file: servers[1],
-      width: "100%",
-      aspectratio: "16:9",
-      autostart: true,
-      controls: true,
-      type: detectType(servers[1])
-    });
-
     function changeServer(serverNumber) {
-      if (!servers[serverNumber]) return;
-      var newSource = servers[serverNumber];
-      jwplayer("player").remove();
-      player = jwplayer("player").setup({
-        file: newSource,
-        width: "100%",
-        aspectratio: "16:9",
-        autostart: true,
-        controls: true,
-        type: detectType(newSource)
-      });
-      player.play();
+      const video = document.getElementById('player');
+      const url = servers[serverNumber];
+      video.pause();
+      video.src = '';
+      video.load();
+
+      if (url.endsWith('.m3u8')) {
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = url;
+        }
+      } else if (url.endsWith('.mpd')) {
+        const player = dashjs.MediaPlayer().create();
+        player.initialize(video, url, true);
+      } else {
+        video.src = url;
+      }
+
+      video.play();
     }
+
+    // Auto-load SERVER 1
+    window.onload = () => changeServer(1);
   </script>
 </body>
 </html>
