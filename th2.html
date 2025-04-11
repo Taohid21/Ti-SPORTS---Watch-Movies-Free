@@ -2,32 +2,38 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPL PLAYER | TI SPORTS</title>
-  <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ti noz Live</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
       background-color: #000;
-      color: #fff;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 20px;
-      background-color: #111;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      padding: 14px 18px;
+      background-color: #0d0d0d;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      position: relative;
     }
 
     header h1 {
-      font-size: 24px;
-      font-weight: bold;
+      font-size: 22px;
+      font-weight: 700;
       color: #00BFFF;
+      letter-spacing: 1px;
     }
 
     header h1 span {
@@ -37,15 +43,18 @@
     .live-badge {
       display: flex;
       align-items: center;
-      font-weight: bold;
-      font-size: 15px;
+      font-weight: 600;
+      font-size: 14px;
       color: #FF0000;
+      background-color: #1a1a1a;
+      padding: 6px 10px;
+      border-radius: 20px;
       animation: pulse 1.5s infinite;
     }
 
     .live-badge .dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       background-color: #FF0000;
       border-radius: 50%;
       margin-right: 6px;
@@ -54,64 +63,56 @@
 
     @keyframes blink {
       0% { opacity: 1; }
-      100% { opacity: 0.2; }
+      100% { opacity: 0.3; }
     }
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      50% { transform: scale(1.08); }
     }
 
-    .video-container {
-      width: 95%;
-      max-width: 800px;
-      margin: 20px auto 10px;
-      background-color: #111;
-      padding: 10px;
-      border-radius: 12px;
+    .container {
+      position: relative;
+      width: 100vw;
+      height: calc(100vh - 60px);
+      top: 0;
     }
 
-    #player {
+    iframe {
       width: 100%;
-      height: 230px;
-      border-radius: 10px;
-      overflow: hidden;
+      height: 100%;
+      border: none;
+      display: block;
     }
 
-    .server-buttons {
-      text-align: center;
-      margin: 15px 0;
-    }
-
-    .server-buttons button {
-      padding: 10px 18px;
-      margin: 8px;
-      font-size: 15px;
-      font-weight: bold;
-      border: 2px solid #1E90FF;
-      background-color: transparent;
-      color: #1E90FF;
-      border-radius: 8px;
-      cursor: pointer;
+    .overlay-image {
+      position: absolute;
+      top: 70px;
+      left: 15px;
+      width: 90px;
+      max-width: 30vw;
+      height: auto;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0.9;
       transition: all 0.3s ease-in-out;
     }
 
-    .server-buttons button:hover {
-      background-color: #1E90FF;
-      color: #fff;
-    }
+    @media (max-width: 500px) {
+      header h1 {
+        font-size: 20px;
+      }
 
-    .description {
-      text-align: center;
-      max-width: 800px;
-      margin: 20px auto;
-      font-size: 16px;
-      line-height: 1.8;
-      padding: 0 15px;
-      color: #dcdcdc;
-      background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+      .live-badge {
+        font-size: 13px;
+        padding: 5px 8px;
+      }
+
+      .overlay-image {
+        width: 50px;
+        left: 300px;
+        top: 265px;
+      }
     }
   </style>
 </head>
@@ -120,63 +121,9 @@
     <h1>ti <span>noz</span></h1>
     <div class="live-badge"><div class="dot"></div>LIVE</div>
   </header>
-
-  <div class="video-container">
-    <div id="player"></div>
+  <div class="container">
+    <iframe src="https://user4580.ifrem.net/iframe/frame.php" allowfullscreen></iframe>
+    <img class="overlay-image" src="https://i.postimg.cc/C54rRRX8/20250411-120624.png" alt="Overlay">
   </div>
-
-  <div class="server-buttons">
-    <button onclick="changeServer(1)">SERVER 1</button>
-    <button onclick="changeServer(2)">SERVER 2</button>
-    <button onclick="changeServer(3)">SERVER 3</button>
-  </div>
-
-  <div class="description">
-    <p>
-      You are now watching the <strong>TI SPORTS</strong> premium live streaming player dedicated to the <strong>Indian Premier League (IPL)</strong> — the most exciting cricket tournament in the world.
-      Our advanced streaming technology supports multiple formats (M3U8, MPD, MP4, etc.) and ensures lightning-fast server switching, giving you the smoothest viewing experience possible.
-      This stylish and fully responsive player adapts seamlessly to both mobile and desktop devices, offering a modern, high-quality IPL live experience — anytime, anywhere.
-    </p>
-  </div>
-
-  <script>
-    var servers = {
-      1: "https://live.tsports.com/mobile_hls/tsports_live_2/playlist.m3u8",
-      2: "http://103.122.74.6:8888/hls/tsports.m3u8",
-      3: "https://abkvfuwaaaaaaaamlk56gfiik2ug5.otte.live.cf.ww.aiv-cdn.net/gru-nitro/live/clients/dash-sd/enc/vodez4h7i9/out/v1/e929aee089864ce98e4c335d19f41e16/cenc-sd.mpd"
-    };
-
-    function detectType(url) {
-      if (url.includes(".m3u8")) return "hls";
-      if (url.includes(".mpd")) return "dash";
-      if (url.includes(".mp4")) return "mp4";
-      if (url.includes(".ts")) return "mp4";
-      return "video";
-    }
-
-    var player = jwplayer("player").setup({
-      file: servers[1],
-      width: "100%",
-      aspectratio: "16:9",
-      autostart: true,
-      controls: true,
-      type: detectType(servers[1])
-    });
-
-    function changeServer(serverNumber) {
-      if (!servers[serverNumber]) return;
-      var newSource = servers[serverNumber];
-      jwplayer("player").remove();
-      player = jwplayer("player").setup({
-        file: newSource,
-        width: "100%",
-        aspectratio: "16:9",
-        autostart: true,
-        controls: true,
-        type: detectType(newSource)
-      });
-      player.play();
-    }
-  </script>
 </body>
 </html>
