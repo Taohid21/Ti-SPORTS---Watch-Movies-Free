@@ -1,75 +1,163 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>Amigos - Doppel Dot Com  
-2023 •</title>  
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">  
-  <style>  
-    body {  
-      margin: 0;  
-      padding: 0;  
-      font-family: 'Poppins', sans-serif;  
-      background-color: #0e0e0e;  
-      color: white;  
-      display: flex;  
-      flex-direction: column;  
-      align-items: center;  
-      justify-content: flex-start;  
-      overflow-x: hidden;  
-    }  
-    .player-container {  
-      width: 100%;  
-      max-width: 100%;  
-      height: 500px;  
-      margin-top: -140px; /* উপরে আনা হলো */  
-      margin-bottom: 30px;  
-      position: relative;  
-    }  
-    iframe {  
-      width: 100%;  
-      height: 100%;  
-      background-color: #000;  
-    }  
-    .movie-description {    
-    font-family: 'Poppins', sans-serif;    
-    font-size: 20px;    
-    color: #ffffff;    
-    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);    
-    background-color: rgba(0, 0, 0, 0.7);    
-    padding: 20px;    
-    border-radius: 12px;    
-    max-width: 600px;    
-    text-align: left;    
-    line-height: 1.6;    
-    border-left: 4px solid #ff6f61;    
-    position: absolute;    
-    top: 509px;    
-    left: 20px;    
-    z-index: 2;    
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);    
-}    
-.movie-description h3 {    
-    margin-top: 0;    
-    font-size: 24px;    
-    font-weight: 600;    
-    color: #f1c40f;    
-    text-transform: uppercase;    
-    letter-spacing: 1px;    
-}
-  </style>  
-</head>  
-<body>  
-  <!-- Video Player Container -->  
-  <div class="player-container">  
-    <iframe src="hs.html" frameborder="0" allowfullscreen></iframe>  
-    <div class="movie-description">  
-      <h3>Movie Title: how swwet</h3>  
-      <p>
-       The content provided in this app is for informational and entertainment purposes only. All videos, movies, and media belong to their respective copyright owners (e.g., Bongo). We do not claim any ownership of the content. If you are a copyright holder and believe your rights have been violated, please contact us. We will take immediate action to resolve the matter.
-      </p>  
-    </div>  
-  </div>  
-</body>  
-</html>
-</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ti noz Live</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background-color: #0d0d0d;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #00BFFF;
+      letter-spacing: 1px;
+    }
+
+    header h1 span {
+      color: #32CD32;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 14px;
+      color: #FF0000;
+      background-color: #1a1a1a;
+      padding: 6px 10px;
+      border-radius: 20px;
+      animation: pulse 1.5s infinite;
+    }
+
+    .live-badge .dot {
+      width: 8px;
+      height: 8px;
+      background-color: #FF0000;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: blink 1s infinite alternate;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .container {
+      position: relative;
+      width: 100vw;
+      height: calc(100vh - 60px);
+      top: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .overlay-image {
+      position: absolute;
+      top: 70px;
+      left: 15px;
+      width: 90px;
+      max-width: 30vw;
+      height: auto;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0.9;
+      transition: all 0.3s ease-in-out;
+    }
+
+    @media (max-width: 500px) {
+      header h1 {
+        font-size: 20px;
+      }
+
+      .live-badge {
+        font-size: 13px;
+        padding: 5px 8px;
+      }
+
+      .overlay-image {
+        width: 60px;
+        left: 303px;
+        top: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ti <span>noz</span></h1>
+    <div class="live-badge"><div class="dot"></div>LIVE</div>
+  </header>
+  <div class="container">
+    <iframe 
+  src="https://sliv.fredflix.fun/play.php?id=sony_ten1hd" 
+  allowfullscreen 
+  sandbox="allow-same-origin allow-scripts allow-presentation">
+</iframe>
+    <img class="overlay-image" src="https://i.postimg.cc/k5LSLBXf/file-00000000bf9461f7aa67456a4f6a3a5a-conversation-id-67f927a4-e968-8005-9934-be866ca61e34-message-i.png" alt="Overlay">
+  </div>
+</body>
+  <script>
+  // মূল উইন্ডোতে কোনো রিডিরেক্ট ঠেকাতে
+  (function() {
+    const originalAssign = window.location.assign;
+    const originalReplace = window.location.replace;
+    const originalHref = Object.getOwnPropertyDescriptor(window.location.__proto__, 'href').set;
+
+    window.location.assign = function() {
+      console.warn("Blocked location.assign");
+    };
+    window.location.replace = function() {
+      console.warn("Blocked location.replace");
+    };
+    Object.defineProperty(window.location, 'href', {
+      set: function() {
+        console.warn("Blocked setting location.href");
+      }
+    });
+
+    // Unload বা beforeunload এর event ব্লক করুন
+    window.onbeforeunload = null;
+    window.onunload = null;
+
+    // যদি কোনো স্ক্রিপ্ট পপআপ খুলতে চায়, সেটাও বন্ধ
+    window.open = function() {
+      console.warn("Blocked window.open");
+      return null;
+    };
+  })();
+      </script>
+  </html>
