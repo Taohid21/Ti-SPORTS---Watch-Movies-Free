@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Live Player Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .logo-overlay {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      width: 90px;
+      opacity: 0;
+      z-index: 10;
+      pointer-events: none;
+      animation: blink 1.5s infinite ease-in-out;
+      transition: opacity 0.5s ease;
+    }
+
+    @keyframes blink {
+      0% { transform: scale(1); opacity: 0.6; filter: drop-shadow(0 0 3px red); }
+      50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 8px red); }
+      100% { transform: scale(1); opacity: 0.6; filter: drop-shadow(0 0 3px red); }
+    }
+
+    @media screen and (max-width: 768px) {
+      .logo-overlay {
+        width: 65px;
+        top: 10px;
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="video-container">
+    <img id="logoOverlay" class="logo-overlay" src="https://i.postimg.cc/k5LSLBXf/file-00000000bf9461f7aa67456a4f6a3a5a-conversation-id-67f927a4-e968-8005-9934-be866ca61e34-message-i.png" />
+    <video id="videoPlayer" width="100%" height="auto" controls autoplay>
+      <source src="http://smart.bengaldigital.live/WWE/tracks-v1a1/mono.ts.m3u8" type="application/x-mpegURL" />
+      <source src="http://yourserver.com/video.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <script>
+    const logo = document.getElementById('logoOverlay');
+    const videoPlayer = document.getElementById('videoPlayer');
+
+    videoPlayer.addEventListener('play', function() {
+      logo.style.opacity = '1'; // Show logo on play
+    });
+
+    videoPlayer.addEventListener('pause', function() {
+      logo.style.opacity = '0'; // Hide logo on pause
+    });
+  </script>
+</body>
+</html>
