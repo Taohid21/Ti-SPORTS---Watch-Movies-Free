@@ -13,6 +13,7 @@
       align-items: center;
       height: 100vh;
     }
+
     .video-container {
       position: relative;
       width: 100%;
@@ -47,28 +48,36 @@
       }
     }
   </style>
+  <script src="https://cdn.jwplayer.com/libraries/IDzF9Zmk.js"></script> <!-- Replace with your JWPlayer Library Key -->
 </head>
 <body>
-  <div class="video-container">
-    <img id="logoOverlay" class="logo-overlay" src="https://i.postimg.cc/k5LSLBXf/file-00000000bf9461f7aa67456a4f6a3a5a-conversation-id-67f927a4-e968-8005-9934-be866ca61e34-message-i.png" />
-    <video id="videoPlayer" width="100%" height="auto" controls autoplay>
-      <source src="http://smart.bengaldigital.live/WWE/tracks-v1a1/mono.ts.m3u8" type="application/x-mpegURL" />
-      <source src="http://yourserver.com/video.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-  </div>
 
-  <script>
-    const logo = document.getElementById('logoOverlay');
-    const videoPlayer = document.getElementById('videoPlayer');
+<div class="video-container">
+  <img id="logoOverlay" class="logo-overlay" src="https://i.postimg.cc/k5LSLBXf/file-00000000bf9461f7aa67456a4f6a3a5a-conversation-id-67f927a4-e968-8005-9934-be866ca61e34-message-i.png" />
+  <div id="jwplayerDiv"></div>
+</div>
 
-    videoPlayer.addEventListener('play', function() {
-      logo.style.opacity = '1'; // Show logo on play
-    });
+<script>
+  const logo = document.getElementById('logoOverlay');
 
-    videoPlayer.addEventListener('pause', function() {
-      logo.style.opacity = '0'; // Hide logo on pause
-    });
-  </script>
+  jwplayer("jwplayerDiv").setup({
+    file: "http://kst.moonplex.net:8080/CH2/tracks-v1a1/mono.m3u8",
+    width: "100%",
+    aspectratio: "16:9",
+    autostart: true,
+    controls: true,
+    stretching: "uniform",
+    mute: false,
+    skin: {
+      name: "glow" // You can change the skin here
+    },
+    events: {
+      onPlay: function() {
+        logo.style.opacity = '1'; // Show logo on play
+      }
+    }
+  });
+</script>
+
 </body>
 </html>
