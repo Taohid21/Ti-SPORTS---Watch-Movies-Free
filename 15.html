@@ -79,28 +79,28 @@
   <script async="async" data-cfasync="false" src="//pl26528045.profitableratecpm.com/3dd8c58ad43760e62c16c229a5e0a8a7/invoke.js"></script>
   <div id="container-3dd8c58ad43760e62c16c229a5e0a8a7"></div>
 
-  <!-- Direct Link Redirect Notice -->
+  <!-- Redirect Notice -->
   <div id="redirect-notice" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; z-index:9999;">
     দয়া করে একটু বিরতি নিন...
   </div>
 
-  <iframe id="redirect-frame" style="display:none;" width="0" height="0"></iframe>
-
   <script>
     function showRedirectNotice() {
-      document.getElementById("redirect-notice").style.display = "flex";
-      setTimeout(function() {
-        // Use hidden iframe to open the link in background
-        let iframe = document.getElementById("redirect-frame");
-        iframe.src = "https://www.profitableratecpm.com/i7hrqdmn?key=adf797639d566a9be93e00c80e5541d0";
+      const notice = document.getElementById("redirect-notice");
+      notice.style.display = "flex";
 
-        // Hide notice again
-        document.getElementById("redirect-notice").style.display = "none";
-      }, 3000);
+      setTimeout(function () {
+        window.location.href = "https://www.profitableratecpm.com/i7hrqdmn?key=adf797639d566a9be93e00c80e5541d0";
+      }, 3000); // ৩ সেকেন্ড পরে রিডিরেক্ট
     }
 
-    // Trigger every 5 minutes
-    setInterval(showRedirectNotice, 5 * 60 * 1000);
+    // প্রথমে ৫ মিনিট পরে চালু হবে
+    setTimeout(function () {
+      showRedirectNotice();
+
+      // তারপর প্রতি ৫ মিনিটে আবার হবে
+      setInterval(showRedirectNotice, 5 * 60 * 1000);
+    }, 5 * 60 * 1000);
   </script>
 
 </div>
