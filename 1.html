@@ -1,77 +1,270 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>Amigos - Doppel Dot Com  
-2023 •</title>  
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">  
-  <style>  
-    body {  
-      margin: 0;  
-      padding: 0;  
-      font-family: 'Poppins', sans-serif;  
-      background-color: #0e0e0e;  
-      color: white;  
-      display: flex;  
-      flex-direction: column;  
-      align-items: center;  
-      justify-content: flex-start;  
-      overflow-x: hidden;  
-    }  
-    .player-container {  
-      width: 100%;  
-      max-width: 100%;  
-      height: 500px;  
-      margin-top: -150px; /* উপরে আনা হলো */  
-      margin-bottom: 30px;  
-      position: relative;  
-    }  
-    iframe {  
-      width: 100%;  
-      height: 100%;  
-      background-color: #000;  
-    }  
-    .movie-description {    
-    font-family: 'Poppins', sans-serif;    
-    font-size: 20px;    
-    color: #ffffff;    
-    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);    
-    background-color: rgba(0, 0, 0, 0.7);    
-    padding: 20px;    
-    border-radius: 12px;    
-    max-width: 600px;    
-    text-align: left;    
-    line-height: 1.6;    
-    border-left: 4px solid #ff6f61;    
-    position: absolute;    
-    top: 370px;    
-    left: 20px;    
-    z-index: 2;    
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);    
-}    
-.movie-description h3 {    
-    margin-top: 0;    
-    font-size: 24px;    
-    font-weight: 600;    
-    color: #f1c40f;    
-    text-transform: uppercase;    
-    letter-spacing: 1px;    
-}
-  </style>  
-</head>  
-<body>  
-  <!-- Video Player Container -->  
-  <div class="player-container">  
-    <iframe src="https://vod.bongobd.com/vod/vod/919f93a7400e4149a70d204beb589074/f/b/fb0c6f67941042048ee1b8335bca69b1/9ff139c9f1b6429bb385afb8addec1f3_x264_1080p_4500k.m3u8" frameborder="0" allowfullscreen></iframe>  
-    <div class="movie-description">  
-      <h3>Movie Title: Michael - Gangster Michael</h3>  
-      <p>
-       Michael - Gangster Michael
-2024 • Movie • 02 Hr 29 Min 26 Sec
-A fearless young man rises through the criminal ranks to avenge his mother’s tragic past, but when he falls for his enemy’s daughter, he’s forced to choose between love and a deadly quest for justice.
-      </p>  
-    </div>  
-  </div>  
-</body>  
-</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Advanced HLS Video Player with Watermark</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet"/>
+    <!-- HLS.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style>
+        video::-webkit-media-controls { display: none !important; }
+        video::-moz-media-controls { display: none !important; }
+        video::media-controls { display: none !important; }
+        body { overflow: hidden; }
+        #player-container .controls-container, #player-container .loading-spinner, #player-container .server-btn, .control-btn, #watermark-image {
+            transition: all 0.3s ease-in-out;
+        }
+        .control-btn { background-color: transparent; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .control-btn:hover { background-color: rgba(255, 255, 255, 0.15); transform: scale(1.1); }
+        .volume-slider { -webkit-appearance: none; appearance: none; width: 0; height: 5px; background: rgba(255, 255, 255, 0.3); border-radius: 5px; outline: none; transition: width 0.2s ease-in-out, opacity 0.2s ease-in-out; opacity: 0; cursor: pointer; vertical-align: middle; }
+        .volume-container:hover .volume-slider { width: 80px; opacity: 1; }
+        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; background: white; border-radius: 50%; cursor: pointer; border: 0; }
+        .volume-slider::-moz-range-thumb { width: 15px; height: 15px; background: white; border-radius: 50%; cursor: pointer; border: 0; }
+        #progress-container { position: relative; }
+        .progress-bar { height: 5px; transition: height 0.2s ease-in-out; border-radius: 5px; }
+        #player-container:hover .progress-bar { height: 8px; }
+        #progress-thumb { position: absolute; top: 50%; width: 16px; height: 16px; background-color: white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; transition: opacity 0.2s ease; }
+        #progress-container:hover #progress-thumb { opacity: 1; }
+    </style>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen">
+
+<!-- Main Player Container -->
+<div id="player-container" class="relative w-screen h-screen bg-black flex items-center justify-center group">
+    
+    <video id="videoPlayer" class="w-full h-full object-contain"></video>
+
+    <!-- ★★★ ওয়াটারমার্ক ইমেজ ★★★ -->
+    <img id="watermark-image" src="" alt="Watermark" class="absolute top-5 right-5 z-10 hidden max-h-12 opacity-70 pointer-events-none">
+
+    <div id="loading-spinner" class="absolute text-white text-4xl pointer-events-none z-20">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    
+    <div id="error-message" class="absolute text-white bg-red-600/80 p-4 rounded-lg hidden z-20">
+        দুঃখিত, এই স্ট্রিমটি চালাতে সমস্যা হচ্ছে।
+    </div>
+
+    <!-- Controls Overlay Container (z-index বাড়ানো হয়েছে) -->
+    <div id="controls-container" class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex flex-col justify-between pointer-events-none z-20">
+        
+        <!-- Top Controls -->
+        <div class="p-4 bg-gradient-to-b from-black/60 to-transparent pointer-events-auto">
+            <div id="server-buttons-container" class="flex items-center space-x-3">
+                <!-- সার্ভার বাটনগুলো এখানে যুক্ত হবে -->
+            </div>
+        </div>
+
+        <!-- Middle Play/Pause Button -->
+        <div class="flex-grow flex items-center justify-center pointer-events-auto">
+             <button id="playPauseBtnCenter" aria-label="Play/Pause" class="text-white rounded-full w-20 h-20 flex items-center justify-center text-4xl focus:outline-none backdrop-blur-sm bg-black/20 hover:bg-black/40 hover:scale-110 transition-all duration-300">
+                <i id="playPauseIconCenter" class="fas fa-play"></i>
+            </button>
+        </div>
+
+        <!-- Bottom Control Bar -->
+        <div class="p-4 bg-gradient-to-t from-black/60 to-transparent pointer-events-auto">
+            <div id="progress-container" class="w-full cursor-pointer mb-2 py-2">
+                <div class="progress-bar bg-white/30 rounded-full">
+                    <div id="progress-played" class="bg-red-500 h-full rounded-full" style="width: 0%;"></div>
+                </div>
+                <div id="progress-thumb"></div>
+            </div>
+            <div class="flex items-center justify-between text-white">
+                <div class="flex items-center space-x-2">
+                    <button id="playPauseBtn" aria-label="Play/Pause" class="control-btn"><i id="playPauseIcon" class="fas fa-play text-xl"></i></button>
+                    <div class="flex items-center space-x-2 volume-container">
+                        <button id="volumeBtn" aria-label="Mute/Unmute" class="control-btn"><i id="volumeIcon" class="fas fa-volume-high text-xl"></i></button>
+                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
+                    </div>
+                    <div class="text-sm font-mono ml-2">
+                        <span id="currentTime">00:00</span> / <span id="totalDuration">00:00</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- সার্ভারের নাম, ভিডিও লিংক এবং ওয়াটারমার্কের লিংক এখানে পরিবর্তন করুন ---
+    const videoSources = [
+        { 
+            name: 'By Rafid', 
+            url: 'https://premierleagpl23.akamaized.net/hls/live/2107108/t0@p300T@p0235/level_0.m3u8',
+            watermarkUrl: 'https://i.postimg.cc/MZ9n1DRn/3532656-ico.png' // উদাহরণ ইমেজ লিংক
+        },
+        { 
+            name: 'Willow', 
+            url: 'https://events3.liveboxpro.com/event/346.m3u8',
+            watermarkUrl: null // এই সার্ভারে কোনো ওয়াটারমার্ক থাকবে না
+        },
+        { 
+            name: 'Ten cricket', 
+            url: 'https://edge3-moblive.yuppcdn.net/drm/smil:tencricketdrm.smil/chunklist_b996000.m3u8',
+            watermarkUrl: null // এই সার্ভারে কোনো ওয়াটারমার্ক থাকবে না
+        },
+    ];
+    const initialServerName = videoSources.length > 0 ? videoSources[0].name : null;
+
+    // --- HTML এলিমেন্ট নির্বাচন ---
+    const playerContainer = document.getElementById('player-container');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const controlsContainer = document.getElementById('controls-container');
+    const watermarkImage = document.getElementById('watermark-image'); // ওয়াটারমার্ক এলিমেন্ট
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playPauseIcon = document.getElementById('playPauseIcon');
+    const playPauseBtnCenter = document.getElementById('playPauseBtnCenter');
+    const playPauseIconCenter = document.getElementById('playPauseIconCenter');
+    const volumeBtn = document.getElementById('volumeBtn');
+    const volumeIcon = document.getElementById('volumeIcon');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalDurationEl = document.getElementById('totalDuration');
+    const progressContainer = document.getElementById('progress-container');
+    const progressPlayed = document.getElementById('progress-played');
+    const progressThumb = document.getElementById('progress-thumb');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const serverButtonsContainer = document.getElementById('server-buttons-container');
+    const errorMessage = document.getElementById('error-message');
+
+    let hls;
+    let controlsTimeout;
+    
+    // --- নতুন ফাংশন: ওয়াটারমার্ক আপডেট করার জন্য ---
+    const updateWatermark = (serverName) => {
+        const sourceObj = videoSources.find(s => s.name === serverName);
+        if (sourceObj && sourceObj.watermarkUrl) {
+            watermarkImage.src = sourceObj.watermarkUrl;
+            watermarkImage.classList.remove('hidden');
+        } else {
+            watermarkImage.classList.add('hidden');
+            watermarkImage.src = ''; // সোর্স খালি করে দেওয়া ভালো
+        }
+    };
+    
+    const createServerButtons = () => {
+        serverButtonsContainer.innerHTML = '';
+        videoSources.forEach(source => {
+            const button = document.createElement('button');
+            button.innerText = source.name;
+            button.dataset.serverName = source.name;
+            button.className = 'server-btn bg-black/40 text-white backdrop-blur-sm rounded-full px-4 py-1.5 text-sm transition-all duration-200 hover:bg-white/20';
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                switchServer(source.name);
+                button.blur();
+            });
+            serverButtonsContainer.appendChild(button);
+        });
+    };
+    
+    const updateActiveServerButton = (activeName) => {
+        document.querySelectorAll('.server-btn').forEach(btn => {
+            if (btn.dataset.serverName === activeName) {
+                btn.classList.add('bg-red-600', 'font-bold');
+                btn.classList.remove('bg-black/40');
+            } else {
+                btn.classList.remove('bg-red-600', 'font-bold');
+                btn.classList.add('bg-black/40');
+            }
+        });
+    };
+
+    const initializePlayer = (serverName) => {
+        if (!serverName) {
+            showError("কোনো সার্ভার খুঁজে পাওয়া যায়নি।");
+            return;
+        }
+        const sourceObj = videoSources.find(s => s.name === serverName);
+        if (!sourceObj) {
+            showError(`সার্ভার "${serverName}" পাওয়া যায়নি।`);
+            return;
+        }
+        
+        // ★★★ ওয়াটারমার্ক আপডেট করার ফাংশন কল করা হলো ★★★
+        updateWatermark(serverName);
+
+        showLoading(true);
+        errorMessage.classList.add('hidden');
+
+        if (hls) hls.destroy();
+
+        if (Hls.isSupported()) {
+            hls = new Hls({
+                // ভবিষ্যতে কোনো কনফিগারেশন লাগলে এখানে যোগ করতে পারেন
+            });
+            hls.loadSource(sourceObj.url);
+            hls.attachMedia(videoPlayer);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => videoPlayer.play());
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) showError();
+            });
+        } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+            videoPlayer.src = sourceObj.url;
+            videoPlayer.addEventListener('loadedmetadata', () => videoPlayer.play());
+        } else {
+            showError('আপনার ব্রাউজার HLS সমর্থন করে না।');
+        }
+        updateActiveServerButton(serverName);
+    };
+
+    const switchServer = (serverName) => {
+        initializePlayer(serverName);
+    };
+    
+    // বাকি ফাংশনগুলো অপরিবর্তিত আছে...
+    const showError = (message = 'দুঃখিত, এই স্ট্রিমটি চালাতে সমস্যা হচ্ছে।') => { errorMessage.innerText = message; errorMessage.classList.remove('hidden'); showLoading(false); if(hls) hls.destroy(); };
+    const togglePlayPause = () => { videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause(); };
+    const updatePlayPauseIcons = () => { const iconClass = videoPlayer.paused ? 'fa-play' : 'fa-pause'; playPauseIcon.className = `fas ${iconClass} text-xl`; playPauseIconCenter.className = `fas ${iconClass}`; playPauseBtnCenter.style.display = videoPlayer.paused ? 'flex' : 'none'; };
+    const formatTime = (time) => { if (isNaN(time) || time === Infinity) return '00:00'; const mins = String(Math.floor(time / 60)).padStart(2, '0'); const secs = String(Math.floor(time % 60)).padStart(2, '0'); return `${mins}:${secs}`; };
+    const updateProgress = () => { const duration = videoPlayer.duration; if (duration && duration !== Infinity) { const percentage = (videoPlayer.currentTime / duration) * 100; progressPlayed.style.width = `${percentage}%`; currentTimeEl.textContent = formatTime(videoPlayer.currentTime); totalDurationEl.textContent = formatTime(duration); } else { progressPlayed.style.width = '100%'; currentTimeEl.textContent = formatTime(videoPlayer.currentTime); totalDurationEl.textContent = 'LIVE'; } };
+    const handleSeek = (e) => { const duration = videoPlayer.duration; if(duration && duration !== Infinity) { const rect = progressContainer.getBoundingClientRect(); const clickX = e.clientX - rect.left; videoPlayer.currentTime = (clickX / rect.width) * duration; } };
+    const updateVolume = () => { const volume = parseFloat(volumeSlider.value); videoPlayer.volume = volume; videoPlayer.muted = (volume === 0); volumeSlider.style.background = `linear-gradient(to right, white ${volume * 100}%, rgba(255, 255, 255, 0.3) ${volume * 100}%)`; };
+    const updateVolumeIcon = () => { if (videoPlayer.muted || videoPlayer.volume === 0) { volumeIcon.className = 'fas fa-volume-xmark text-xl'; } else if (videoPlayer.volume < 0.5) { volumeIcon.className = 'fas fa-volume-low text-xl'; } else { volumeIcon.className = 'fas fa-volume-high text-xl'; } };
+    const toggleMute = () => { videoPlayer.muted = !videoPlayer.muted; if (videoPlayer.muted) { volumeSlider.setAttribute('data-last-volume', volumeSlider.value); volumeSlider.value = 0; } else { volumeSlider.value = volumeSlider.getAttribute('data-last-volume') || 1; } updateVolume(); updateVolumeIcon(); };
+    const showLoading = (isLoading) => { loadingSpinner.style.display = isLoading ? 'block' : 'none'; if (isLoading) { playPauseBtnCenter.style.display = 'none'; } else if (videoPlayer.paused) { playPauseBtnCenter.style.display = 'flex'; } };
+    const hideControls = () => { if (videoPlayer.paused) return; controlsContainer.classList.add('opacity-0'); controlsContainer.classList.remove('group-hover:opacity-100'); };
+    const showControls = () => { controlsContainer.classList.remove('opacity-0'); controlsContainer.classList.add('group-hover:opacity-100'); clearTimeout(controlsTimeout); controlsTimeout = setTimeout(hideControls, 4000); };
+    const handleProgressMouseMove = (e) => { const rect = progressContainer.getBoundingClientRect(); const hoverX = e.clientX - rect.left; const width = rect.width; let percentage = (hoverX / width) * 100; percentage = Math.max(0, Math.min(100, percentage)); progressThumb.style.left = `${percentage}%`; }
+
+    // --- ইভেন্ট লিসেনার ---
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    playPauseBtnCenter.addEventListener('click', togglePlayPause);
+    videoPlayer.addEventListener('click', togglePlayPause);
+    videoPlayer.addEventListener('play', updatePlayPauseIcons);
+    videoPlayer.addEventListener('pause', updatePlayPauseIcons);
+    videoPlayer.addEventListener('timeupdate', updateProgress);
+    volumeBtn.addEventListener('click', toggleMute);
+    volumeSlider.addEventListener('input', updateVolume);
+    videoPlayer.addEventListener('volumechange', updateVolumeIcon);
+    progressContainer.addEventListener('click', handleSeek);
+    progressContainer.addEventListener('mousemove', handleProgressMouseMove);
+    videoPlayer.addEventListener('waiting', () => showLoading(true));
+    videoPlayer.addEventListener('playing', () => showLoading(false));
+    videoPlayer.addEventListener('canplay', () => showLoading(false));
+    playerContainer.addEventListener('mousemove', showControls);
+    playerContainer.addEventListener('mouseleave', () => { hideControls(); progressThumb.style.opacity = '0'; });
+    document.addEventListener('keydown', (e) => { switch(e.code) { case 'Space': e.preventDefault(); togglePlayPause(); break; case 'KeyM': toggleMute(); break; case 'ArrowRight': videoPlayer.currentTime += 5; break; case 'ArrowLeft': videoPlayer.currentTime -= 5; break; } });
+
+    // --- প্রাথমিক সেটআপ ---
+    createServerButtons();
+    if (initialServerName) {
+        initializePlayer(initialServerName);
+    }
+    updateVolume();
+    updateVolumeIcon();
+    showControls();
+});
+</script>
+
+</body>
 </html>
